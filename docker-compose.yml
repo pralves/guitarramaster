@@ -1,0 +1,25 @@
+services:
+  guitarramaster:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: guitarramaster:latest
+    container_name: guitarramaster
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4174
+    ports:
+      - "4174:4174"
+    volumes:
+      - ./db.json:/app/db.json
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4174/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

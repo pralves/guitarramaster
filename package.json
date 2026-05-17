@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node scripts/preview.mjs . 4173",
     "build": "node scripts/build.mjs",
-    "preview": "node scripts/preview.mjs dist 4174"
+    "preview": "node scripts/preview.mjs dist 4174",
+    "start": "node scripts/preview.mjs dist"
   },
   "keywords": [
     "guitarra",

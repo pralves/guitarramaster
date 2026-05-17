@@ -20,6 +20,22 @@ O build gera a pasta `dist`, pronta para publicar em hospedagens estaticas.
 - Vercel: `vercel.json` ja aponta `npm run build` e publica `dist`.
 - Qualquer host estatico: rode `npm.cmd run build` e publique o conteudo de `dist`.
 
+## Docker Manager
+
+Arquivos base:
+
+- `Dockerfile`: cria a imagem Node e gera o `dist` no build.
+- `docker-compose.yml`: stack para Docker Manager/Portainer.
+- `.dockerignore`: reduz o contexto enviado para o Docker.
+
+Para publicar localmente com Docker ativo:
+
+```powershell
+docker compose up -d --build
+```
+
+A aplicacao sobe em `http://localhost:4174`. O arquivo `db.json` fica persistido por bind mount em `./db.json:/app/db.json`.
+
 ## Estrutura
 
 - `index.html`: pagina principal em UTF-8.
