@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tailwind Plus - Industrial</title>
+<!-- fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="assets/css2_e01beb4f8743.css" rel="stylesheet"/>
+<link href="assets/css2_86e10c4bcbd4.css" rel="stylesheet"/>
+<link href="assets/css2_0fc20595ebff.css" rel="stylesheet"/>
+<link href="assets/css2_23afcbef9bdd.css" rel="stylesheet"/>
+<link href="assets/css2_82ced711bf49.css" rel="stylesheet"/>
+<link href="assets/css2_fa22aa91016e.css" rel="stylesheet"/>
+<link href="assets/css2_2b2d87bc82d8.css" rel="stylesheet"/>
+<link href="assets/css2_4fef849c83da.css" rel="stylesheet"/>
+<link href="assets/css2_a7b22b336fe1.css" rel="stylesheet"/>
+<link href="assets/css2_0b2072b66163.css" rel="stylesheet"/>
+<link href="assets/css2_9b8bf743d4a8.css" rel="stylesheet"/>
+<link href="assets/css2_8e191ef32247.css" rel="stylesheet"/>
+<link href="assets/css2_70fd47a02eed.css" rel="stylesheet"/>
+<link href="assets/css2_b52fc18295f8.css" rel="stylesheet"/>
+<link href="assets/css2_62759cd015bd.css" rel="stylesheet"/>
+<link href="assets/css2_f495c2faa2a6.css" rel="stylesheet"/>
+<link href="assets/css2_6f16cdd6fd9f.css" rel="stylesheet"/>
+<link href="assets/css2_94cb6f0c406a.css" rel="stylesheet"/>
+<!-- css -->
+<!-- typography utilities (font-* helpers and scrollbar hide) used across the entire layout -->
+<link href="assets/css/typography.css" rel="stylesheet"/>
+<!-- shared component effects (gradient border on Login button) -->
+<link href="assets/css/components.css" rel="stylesheet"/>
+<!-- decorative shape animations (floating circles, squares and triangles in the right column) -->
+<link href="assets/css/animations.css" rel="stylesheet"/>
+<!-- head-only js (Tailwind runtime, must stay in head) -->
+<!-- Tailwind CDN runtime that compiles utility classes at load time -->
+<script src="assets/resource_3fa48481346f.js"></script>
+<!-- Lucide icons runtime; lucide.createIcons() replaces <i data-lucide> tags below -->
+<script src="assets/lucide_latest_2eebd0ebe8c2.js"></script>
+</head>
+<body class="min-h-screen flex flex-col antialiased xl:items-center xl:justify-center xl:p-8 text-neutral-950 font-space bg-neutral-400 px-0 py-0">
+
+<!-- main-card -->
+<main class="xl:rounded-[3.5rem] xl:p-12 overflow-hidden flex flex-col xl:max-w-[96rem] xl:shadow-2xl bg-[#E6E6E6] w-full rounded-none pt-6 pr-6 pb-6 pl-6 relative shadow-none justify-between">
+<div class="pointer-events-none bg-gradient-to-br from-white/40 via-transparent to-neutral-400/10 w-full h-full absolute top-0 left-0"></div>
+
+<!-- navigation -->
+<nav class="relative z-20 flex flex-wrap items-center justify-between gap-6 mb-12 md:mb-0">
+<div class="flex items-center gap-2 group cursor-pointer">
+<div class="flex gap-1">
+<div class="w-3 h-8 bg-neutral-950 rounded-full"></div>
+<div class="w-3 h-8 bg-neutral-950 rounded-full group-hover:h-5 transition-all duration-300"></div>
+<div class="w-3 h-8 bg-neutral-950 rounded-full"></div>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-12 text-xs font-medium tracking-widest uppercase text-neutral-600">
+<a class="hover:text-neutral-950 transition-colors" href="#">Modelos</a>
+<a class="hover:text-neutral-950 transition-colors" href="#">Componentes</a>
+<a class="hover:text-neutral-950 transition-colors" href="#">Documentação</a>
+<a class="hover:text-neutral-950 transition-colors" href="#">Preços</a>
+</div>
+<div class="flex gap-4 gap-x-4 gap-y-4 items-center">
+<button class="hidden md:flex hover:bg-slate-50 hover:text-slate-800-sm font-medium text-slate-600 bg-gradient-to-b from-black/15 via-black/25 to-black/15 rounded-full pt-3 pr-6 pb-3 pl-6 relative gap-x-2 gap-y-2 items-center" style="box-shadow: 0 18px 35px rgba(31, 41, 55, 0.25), 0 0 0 1px rgba(209, 213, 219, 0.3); position: relative; --border-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.8)); --border-radius-before: 9999px">
+<span class="text-sm font-medium text-black/70 tracking-tight uppercase">Entrar</span>
+<svg class="w-4 h-4 text-black/60" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+</button>
+<button class="group transition-all duration-300 overflow-hidden font-medium text-neutral-200 bg-gradient-to-r from-neutral-700 to-neutral-800 rounded-full pt-3 pr-8 pb-3 pl-8 relative" style="box-shadow: 0 15px 33px -12px rgba(38, 38, 38, 0.7), inset 0 4px 6.3px rgba(82, 82, 82, 0.5), inset 0 -5px 6.3px rgba(23, 23, 23, 0.8); border-radius: 9999px">
+<div class="group-hover:translate-y-0 transition-transform duration-300 bg-white/10 absolute top-0 right-0 bottom-0 left-0 translate-y-full"></div>
+<span class="relative flex items-center gap-2 text-xs font-semibold tracking-widest uppercase">
+Começar agora
+<svg class="w-4 h-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+</span>
+</button>
+<button class="md:hidden p-3 rounded-full bg-neutral-950 text-white">
+<i data-lucide="menu" class="w-5 h-5"></i>
+</button>
+</div>
+</nav>
+
+<!-- hero -->
+<div class="flex-grow flex flex-col md:py-0 lg:h-[800px] h-[300px] border-black/5 rounded-r-3xl border-t border-b mt-4 mb-4 pt-10 pb-10 relative justify-center">
+<img alt="Plano de fundo do container" class="w-1/2 h-full object-cover rounded-3xl absolute top-0 right-0 bottom-0 left-1/2" data-container-bg="true" src="assets/6e6457af-451b-416a-b0af-1a4eff_f12a0b260530.webp"/>
+<div class="mb-6 md:mb-2">
+<p class="md:text-sm uppercase md:max-w-md text-xs font-medium text-neutral-500 tracking-widest max-w-[160px]">Engenharia das interfaces digitais de amanhã, hoje</p>
+</div>
+<div class="group relative">
+<div class="hidden -top-4 hover:scale-105 transition-transform cursor-default lg:flex bg-[#E6E6E6] z-20 border-neutral-400 border rounded-full px-5 py-2 absolute top-[0%] left-[44%] shadow-sm gap-x-2 gap-y-2 items-center">
+<span class="text-[0.65rem] font-bold uppercase tracking-widest text-neutral-800">Responsivo</span>
+</div>
+<div class="hidden hover:scale-105 transition-transform cursor-default lg:flex bg-[#E6E6E6] z-20 border-neutral-400 border rounded-full px-5 py-2 absolute top-[45%] right-[-2%] shadow-sm gap-x-2 gap-y-2 items-center">
+<span class="text-[0.65rem] font-bold uppercase tracking-widest text-neutral-800">Acessível</span>
+</div>
+<div class="hidden lg:flex z-20 gap-2 hover:scale-105 transition-transform cursor-default text-white bg-neutral-950 rounded-full px-5 py-2 absolute bottom-[-12%] left-[2%] shadow-lg gap-x-2 gap-y-2 items-center">
+<span class="text-[0.65rem] font-bold uppercase tracking-widest">React e Next.js</span>
+</div>
+<h1 class="text-[18vw] md:text-[14vw] lg:text-[13rem] leading-[0.8] uppercase select-none md:text-left font-medium text-neutral-950 tracking-tighter font-oswald text-center mix-blend-darken max-w-3xl">
+Vá
+<span class="pl-0 md:pl-20">Mais Rápido</span>
+</h1>
+</div>
+</div>
+
+<!-- hero-bottom-specs -->
+<div class="flex flex-col lg:flex-row lg:items-end z-20 mt-8 relative gap-x-12 gap-y-12 items-start justify-between">
+<div class="flex flex-col gap-6 max-w-lg">
+<div class="flex items-center gap-3 text-xs font-semibold tracking-widest uppercase text-neutral-500">
+<span>Não desenhamos telas</span>
+<span class="w-4 h-[1px] bg-neutral-400"></span>
+<span>Mapeamos constelações</span>
+</div>
+<p class="text-sm md:text-base text-neutral-700 leading-relaxed font-normal text-pretty uppercase tracking-wide">
+A Future UI é uma coleção de interfaces responsivas e retro-futuristas de nível espacial. Layouts prontos para lançamento, painéis neon e controles cósmicos projetados para a próxima era da interação humano-computador.
+</p>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2 rounded-full border border-neutral-400 text-[0.7rem] font-semibold uppercase tracking-widest hover:bg-neutral-300 transition-colors">Painéis Quânticos</button>
+<button class="px-5 py-2 rounded-full border border-neutral-400 text-[0.7rem] font-semibold uppercase tracking-widest hover:bg-neutral-300 transition-colors">Salas de Controle Cósmicas</button>
+</div>
+</div>
+<div class="w-full lg:w-auto flex flex-col md:flex-row gap-4">
+<div class="group flex-1 lg:flex-none lg:w-48 bg-neutral-200/50 hover:bg-neutral-950 hover:text-white border border-neutral-300 hover:border-neutral-950 rounded-2xl p-5 transition-all duration-300 cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<i data-lucide="layout-template" class="w-5 h-5 text-neutral-600 group-hover:text-white transition-colors"></i>
+<span class="text-[0.6rem] font-mono opacity-50">01</span>
+</div>
+<h3 class="text-xs font-semibold uppercase tracking-widest mb-1">Layouts Orbitais</h3>
+<p class="text-[0.65rem] leading-normal opacity-70 uppercase">Páginas retro-futuristas em órbita para qualquer missão.</p>
+</div>
+<div class="group flex-1 lg:flex-none lg:w-48 bg-neutral-200/50 hover:bg-neutral-950 hover:text-white border border-neutral-300 hover:border-neutral-950 rounded-2xl p-5 transition-all duration-300 cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<i data-lucide="component" class="w-5 h-5 text-neutral-600 group-hover:text-white transition-colors"></i>
+<span class="text-[0.6rem] font-mono opacity-50">02</span>
+</div>
+<h3 class="text-xs font-semibold uppercase tracking-widest mb-1">Módulos Estelares</h3>
+<p class="text-[0.65rem] leading-normal opacity-70 uppercase">Mais de 500 fragmentos de UI cósmica plug-and-play.</p>
+</div>
+<div class="group flex-1 lg:flex-none lg:w-48 bg-neutral-200/50 hover:bg-neutral-950 hover:text-white border border-neutral-300 hover:border-neutral-950 rounded-2xl p-5 transition-all duration-300 cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<i data-lucide="library" class="w-5 h-5 text-neutral-600 group-hover:text-white transition-colors"></i>
+<span class="text-[0.6rem] font-mono opacity-50">03</span>
+</div>
+<h3 class="text-xs font-semibold uppercase tracking-widest mb-1">Future UI Kit</h3>
+<p class="text-[0.65rem] leading-normal opacity-70 uppercase">Sistema retro-futurista para começar projetos em React.</p>
+</div>
+</div>
+</div>
+
+<!-- ai-section -->
+<section class="md:py-24 md:px-12 lg:px-20 text-white bg-neutral-950 w-full rounded-3xl mt-16 px-6 py-16">
+<div class="flex flex-col lg:flex-row justify-between gap-8 mb-16">
+<div class="max-w-xl">
+<h2 class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-tight font-oswald">
+Desenvolvimento, Potencializado por IA.
+</h2>
+<p class="text-sm md:text-base text-neutral-400 mt-4 uppercase tracking-wide">
+Acelere seu fluxo de trabalho com automação, iteração mais rápida e possibilidades infinitas.
+</p>
+</div>
+<div class="max-w-sm">
+<p class="text-sm text-neutral-400 leading-relaxed">
+Da prototipação rápida ao código pronto para produção — entregue mais rápido a cada sprint com ferramentas de desenvolvimento aprimoradas por IA.
+</p>
+</div>
+</div>
+
+<!-- ai-feature-cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+<div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 relative overflow-hidden">
+<div class="bg-neutral-800/50 rounded-xl p-4 mb-6 font-mono text-xs text-neutral-300">
+<div class="text-neutral-500 mb-2">// Configurar "CoreAPI" {</div>
+<div class="ml-4 text-emerald-400">api_key = <span class="text-amber-400">var.core_api_key</span></div>
+<div class="ml-4 text-emerald-400">endpoint = <span class="text-amber-400">var.api_endpoint</span></div>
+<div class="text-neutral-500">}</div>
+<div class="mt-3 text-neutral-500">resource "api_gateway" "main" {</div>
+<div class="ml-4 text-cyan-400">// Auto-escalonamento ativado</div>
+<div class="text-neutral-500">}</div>
+<div class="mt-3 text-neutral-500">resource "dev_workspace" "team" {</div>
+<div class="ml-4 text-emerald-400">name = <span class="text-amber-400">"Squad Frontend"</span></div>
+<div class="text-neutral-500">}</div>
+</div>
+<div class="flex items-center gap-3 mb-2">
+<svg class="w-5 h-5 text-white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><path d="M6.5 8a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3" opacity=".5"/><path clip-rule="evenodd" d="M5 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3zm1.5 6a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5M11 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 1.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm-.5 4.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 1.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm-.5 4.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 1.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1z" fill-rule="evenodd"/><path d="M6.5 14a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m0 6a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3" opacity=".5"/></g></svg>
+<h3 class="text-sm font-semibold uppercase tracking-widest">Inicializar Ferramentas</h3>
+</div>
+<p class="text-xs text-neutral-500 uppercase tracking-wide">Crie componentes inteligentes adaptados aos seus fluxos de trabalho.</p>
+</div>
+
+<div class="overflow-hidden bg-orange-400 border-white/15 border rounded-2xl pt-6 pr-6 pb-6 pl-6 relative shadow-lg shadow-orange-900/40">
+<div class="flex items-center justify-between mb-4">
+<div>
+<p class="text-xs font-medium uppercase tracking-[0.14em] text-orange-950/80">Uso da API</p>
+<h2 class="text-[20px] font-semibold tracking-tight text-orange-950">Requisições Mensais</h2>
+</div>
+<button class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-300/60 hover:bg-orange-300/80 transition border border-orange-200">
+<svg class="text-orange-950" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" fill="currentColor" opacity=".5" r="10"/><path d="M7.378 11.63h-.75zm0 .926l-.562.497a.75.75 0 0 0 1.08.044zm2.141-1.015a.75.75 0 0 0-1.038-1.082zm-2.958-1.038a.75.75 0 1 0-1.122.994zm8.37-1.494a.75.75 0 1 0 1.102-1.018zM12.045 6.25c-2.986 0-5.416 2.403-5.416 5.38h1.5c0-2.137 1.747-3.88 3.916-3.88zm-5.416 5.38v.926h1.5v-.926zm1.269 1.467l1.622-1.556l-1.038-1.082l-1.622 1.555zm.042-1.039l-1.378-1.555l-1.122.994l1.377 1.556zm8.094-4.067a5.42 5.42 0 0 0-3.99-1.741v1.5a3.92 3.92 0 0 1 2.889 1.26zm.585 3.453l.56-.498a.75.75 0 0 0-1.08-.043zm-2.139 1.014a.75.75 0 1 0 1.04 1.082zm2.96 1.04a.75.75 0 0 0 1.12-.997zm-8.393 1.507a.75.75 0 0 0-1.094 1.026zm2.888 2.745c2.993 0 5.434-2.4 5.434-5.38h-1.5c0 2.135-1.753 3.88-3.934 3.88zm5.434-5.38v-.926h-1.5v.926zm-1.27-1.467l-1.619 1.555l1.04 1.082l1.618-1.555zm-.04 1.04l1.38 1.554l1.122-.996l-1.381-1.555zM7.952 16.03a5.45 5.45 0 0 0 3.982 1.719v-1.5c-1.143 0-2.17-.48-2.888-1.245z" fill="currentColor"/></svg>
+</button>
+</div>
+<div class="flex-1 flex flex-col gap-4">
+<div class="flex items-center justify-between text-[10px] text-orange-950/80">
+<span>Jan</span><span>Fev</span><span>Mar</span><span class="font-medium text-orange-950">Abr</span><span>Mai</span><span>Jun</span><span>Jul</span><span>Ago</span><span>Set</span><span>Out</span><span>Nov</span><span>Dez</span>
+</div>
+<div class="mt-1 grid grid-cols-12 gap-1.5 h-28 items-end">
+<div class="rounded-full bg-orange-900/40 h-[26%]"></div>
+<div class="rounded-full bg-orange-900/40 h-[32%]"></div>
+<div class="rounded-full bg-orange-900/40 h-[45%]"></div>
+<div class="rounded-full bg-orange-50 h-[68%] shadow-md shadow-orange-900/40 border border-orange-200/70"></div>
+<div class="rounded-full bg-orange-900/60 h-[74%]"></div>
+<div class="rounded-full bg-orange-900/60 h-[80%]"></div>
+<div class="rounded-full bg-orange-900/60 h-[92%]"></div>
+<div class="rounded-full bg-orange-900/60 h-[100%]"></div>
+<div class="rounded-full bg-orange-900/40 h-[77%]"></div>
+<div class="rounded-full bg-orange-900/30 h-[60%]"></div>
+<div class="rounded-full bg-orange-900/20 h-[40%]"></div>
+<div class="rounded-full bg-orange-900/20 h-[34%]"></div>
+</div>
+<div class="mt-3 flex items-center justify-between gap-3">
+<div class="flex-1">
+<p class="text-[11px] text-orange-950/80 mb-1">Mês atual</p>
+<button class="wbetween rounded-2xl bg-orange-300/70 px-3 py-2 text-xs font-medium text-orange-950 border border-orange-600/40 hover:bg-orange-200/80 hover:border-orange-700/50">
+<span>Abril</span>
+<svg class="text-orange-950" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8.303 12.404l3.327 3.431c.213.22.527.22.74 0l6.43-6.63C19.201 8.79 18.958 8 18.43 8h-5.723z" fill="currentColor"/><path d="M11.293 8H5.57c-.528 0-.771.79-.37 1.205l2.406 2.481z" fill="currentColor" opacity=".5"/></svg>
+</button>
+</div>
+<div class="flex flex-col items-end">
+<p class="text-[11px] text-orange-950/80 mb-0.5">Meta de uso</p>
+<p class="text-lg font-semibold tracking-tight text-orange-950">72%</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="overflow-hidden bg-neutral-900 border-neutral-800 border rounded-2xl pt-6 pr-6 pb-6 pl-6 relative flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<div>
+<p class="text-xs font-medium uppercase tracking-[0.14em] text-neutral-400">Histórico de implantação</p>
+<h2 class="text-[20px] font-semibold tracking-tight text-white">Calendário de Servidor</h2>
+</div>
+<button class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 border border-white/10 hover:bg-neutral-700 transition">
+<svg class="text-neutral-200" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972s1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724" fill="currentColor"/><path d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828S6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172S22 17.772 22 14" fill="currentColor" opacity=".5"/><path d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0" fill="currentColor"/></svg>
+</button>
+</div>
+<p class="text-xs text-neutral-400 mb-4 border-b border-white/5 pb-3">47 implantações nos últimos 30 dias.</p>
+<div class="grid grid-cols-7 gap-2 text-center text-[11px] text-neutral-400 mb-2">
+<span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span>
+</div>
+<div class="grid grid-cols-7 gap-2 flex-1">
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div><div class="absolute inset-y-0 right-0 h-7 w-3.5 rounded-r-full bg-orange-400"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div><div class="absolute inset-y-0 right-0 h-7 w-3.5 rounded-r-full bg-orange-400"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div><div class="absolute inset-y-0 right-0 h-7 w-3.5 rounded-r-full bg-orange-400"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div><div class="absolute inset-y-0 right-0 h-7 w-3.5 rounded-r-full bg-orange-400"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-neutral-800 border border-white/10"></div></div>
+<div class="relative flex items-center justify-center"><div class="h-7 w-7 rounded-full bg-orange-400 border border-orange-200/80"></div></div>
+</div>
+<div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-neutral-400">
+<div class="flex items-center gap-2"><span class="inline-block h-2.5 w-2.5 rounded-full bg-orange-400"></span><span>Implantado</span></div>
+<div class="flex items-center gap-2"><span class="inline-block h-2.5 w-2.5 rounded-full bg-neutral-700"></span><span>Inativo</span></div>
+</div>
+</div>
+</div>
+
+<!-- ai-section-bottom -->
+<div class="border-t border-neutral-800 pt-12 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
+<div class="max-w-2xl">
+<p class="text-xs text-neutral-500 uppercase tracking-widest mb-4">Plataforma de desenvolvimento com IA.</p>
+<h3 class="text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight">
+Transforme sua API em um servidor MCP com entradas estruturadas, descrições otimizadas para prompts e execução hospedada.
+</h3>
+</div>
+</div>
+
+<!-- trusted-by -->
+<div class="mt-16 pt-8 border-t border-neutral-800">
+<p class="text-xs text-neutral-500 uppercase tracking-widest mb-8 text-center">Confiança das equipes líderes em todo o mundo</p>
+<div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-50">
+<svg class="h-6 w-auto text-white" height="24" viewBox="0 0 128 128" width="100" xmlns="http://www.w3.org/2000/svg"><path d="M64 0L128 112H0L64 0z" fill="currentColor"/></svg>
+<svg class="h-6 w-auto text-white" height="24" viewBox="0 0 128 128" width="100" xmlns="http://www.w3.org/2000/svg"><path d="M64 0C28.7 0 0 28.7 0 64c0 28.3 18.3 52.3 43.7 60.8c3.2.6 4.4-1.4 4.4-3.1c0-1.5-.1-6.5-.1-11.8c-16 3-20.2-4-21.5-7.7c-.7-1.9-3.8-7.7-6.5-9.2c-2.2-1.2-5.4-4.2-.1-4.3c5-.1 8.6 4.6 9.8 6.5c5.7 9.6 14.8 6.9 18.5 5.2c.6-4.1 2.2-6.9 4.1-8.5c-14.2-1.6-29.1-7.1-29.1-31.6c0-7 2.5-12.7 6.5-17.2c-.6-1.6-2.8-8.1.6-16.9c0 0 5.3-1.7 17.5 6.5c5.1-1.4 10.5-2.1 15.9-2.1s10.8.7 15.9 2.1c12.2-8.3 17.5-6.5 17.5-6.5c3.5 8.8 1.3 15.3.6 16.9c4 4.5 6.5 10.2 6.5 17.2c0 24.6-15 30-29.2 31.6c2.3 2 4.3 5.9 4.3 11.9c0 8.6-.1 15.5-.1 17.6c0 1.7 1.2 3.7 4.4 3.1C109.7 116.3 128 92.3 128 64c0-35.3-28.7-64-64-64" fill="currentColor"/></svg>
+<img src="assets/images/svg/logo-stripe.svg" class="w-[100px] h-[24px]" alt="Logotipo Stripe"/>
+<img src="assets/images/svg/logo-linear.svg" class="w-[100px] h-[24px]" alt="Logotipo Linear"/>
+<svg class="h-6 w-auto text-white" height="24" viewBox="0 0 128 128" width="100" xmlns="http://www.w3.org/2000/svg"><path d="M45.5 129c11.9 0 21.5-9.6 21.5-21.5V86H45.5C33.6 86 24 95.6 24 107.5S33.6 129 45.5 129m0 0" fill="currentColor"/><path d="M24 64.5C24 52.6 33.6 43 45.5 43H67v43H45.5C33.6 86 24 76.4 24 64.5m0 0" fill="currentColor"/><path d="M24 21.5C24 9.6 33.6 0 45.5 0H67v43H45.5C33.6 43 24 33.4 24 21.5m0 0" fill="currentColor"/><path d="M67 0h21.5C100.4 0 110 9.6 110 21.5S100.4 43 88.5 43H67zm0 0" fill="currentColor"/><path d="M110 64.5c0 11.9-9.6 21.5-21.5 21.5S67 76.4 67 64.5S76.6 43 88.5 43S110 52.6 110 64.5m0 0" fill="currentColor"/></svg>
+</div>
+</div>
+</section>
+
+<!-- decorative-orb -->
+<div class="absolute top-[30%] right-[-10%] md:right-[5%] w-[30vw] h-[30vw] md:w-[20rem] md:h-[20rem] rounded-full bg-gradient-to-b from-neutral-200 to-neutral-400 opacity-20 blur-3xl pointer-events-none mix-blend-multiply"></div>
+
+<!-- decorative-shapes -->
+<div class="hidden lg:block mix-blend-overlay w-1/2 h-full z-50 pointer-events-none absolute right-0 bottom-0">
+<div class="absolute w-12 h-12 rounded-full border border-white" style="top: 10%; left: 20%; animation: float1 6s ease-in-out infinite;"></div>
+<div class="absolute w-10 h-10 rounded-full bg-white" style="top: 60%; left: 70%; animation: float2 8s ease-in-out infinite;"></div>
+<div class="absolute w-14 h-14 rounded-full border border-white" style="top: 80%; left: 30%; animation: float3 7s ease-in-out infinite;"></div>
+<div class="w-10 h-10 border-white border absolute" style="top: 15%; left: 60%; animation: float2 5s ease-in-out infinite; transform-origin: center"></div>
+<div class="absolute w-12 h-12 bg-white" style="top: 40%; left: 10%; animation: spin1 10s linear infinite;"></div>
+<div class="absolute w-8 h-8 border border-white" style="top: 70%; left: 80%; animation: float1 9s ease-in-out infinite; transform: rotate(45deg);"></div>
+<div class="absolute" style="top: 25%; left: 45%; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid white; animation: float3 6s ease-in-out infinite;"></div>
+<div class="absolute" style="top: 55%; left: 25%; width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 24px solid white; animation: float1 8s ease-in-out infinite;"></div>
+<div class="absolute" style="top: 15%; left: 85%; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 16px solid white; animation: spin2 12s linear infinite;"></div>
+<div class="absolute" style="top: 85%; left: 55%; width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 18px solid white; animation: float2 7s ease-in-out infinite;"></div>
+</div>
+</main>
+
+<!-- js -->
+<!-- bootstraps every <i data-lucide> tag (menu, layout-template, component, library) into a real SVG icon -->
+<script src="assets/js/lucide-init.js"></script>
+<!-- gracefully replaces broken images with a deterministic stock fallback URL -->
+<script src="assets/js/img-fallback.js"></script>
+</body>
+</html>
