@@ -27,3 +27,8 @@ O build gera a pasta `dist`, pronta para publicar em hospedagens estaticas.
 - `js/landing.js`: modal de captura e rolagem suave.
 - `scripts/build.mjs`: copia os arquivos publicaveis para `dist`.
 - `scripts/preview.mjs`: servidor local simples para conferir o build.
+- `db.json`: base local onde o preview grava os cadastros enviados para `/api/leads`.
+
+## Cadastro local
+
+Os botoes "Garantir minha vaga" e "Quero ser um Guitarra Master" abrem o formulario de interessados. Ao rodar `npm.cmd run preview`, o servidor aceita `POST /api/leads` e persiste cada cadastro em `db.json`.
