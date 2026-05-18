@@ -10,20 +10,46 @@ services:
       NODE_ENV: production
       PORT: 4174
       DB_PATH: /app/data/db.json
-    ports:
-      - "4174:4174"
     volumes:
       - guitarramaster_data:/app/data
-    healthcheck:
-      test:
-        - CMD
-        - node
-        - -e
-        - "fetch('http://127.0.0.1:4174/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.guitarramaster.rule=Host(`guitarramaster.com.br`) || Host(`www.guitarramaster.com.br`)
+      - traefik.http.routers.guitarramaster.entrypoints=websecure
+      - traefik.http.routers.guitarramaster.tls.certresolver=letsencrypt
+      - traefik.http.services.guitarramaster.loadbalancer.server.port=4174
 
 volumes:
   guitarramaster_data:
+
+
+
+# services:
+#   guitarramaster:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     image: guitarramaster:latest
+#     container_name: guitarramaster
+#     restart: unless-stopped
+#     environment:
+#       NODE_ENV: production
+#       PORT: 4174
+#       DB_PATH: /app/data/db.json
+#     ports:
+#       - "4174:4174"
+#     volumes:
+#       - guitarramaster_data:/app/data
+#     healthcheck:
+#       test:
+#         - CMD
+#         - node
+#         - -e
+#         - "fetch('http://127.0.0.1:4174/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+#       interval: 30s
+#       timeout: 5s
+#       retries: 3
+#       start_period: 10s
+
+# volumes:
+#   guitarramaster_data:
