@@ -34,7 +34,7 @@ Para publicar localmente com Docker ativo:
 docker compose up -d --build
 ```
 
-A aplicacao sobe em `http://localhost:4174`. O arquivo `db.json` fica persistido por bind mount em `./db.json:/app/db.json`.
+A aplicacao sobe em `http://localhost:4174`. Os cadastros ficam persistidos no volume nomeado `guitarramaster_data`, usando `DB_PATH=/app/data/db.json`.
 
 ## Estrutura
 

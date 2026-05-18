@@ -9,10 +9,11 @@ services:
     environment:
       NODE_ENV: production
       PORT: 4174
+      DB_PATH: /app/data/db.json
     ports:
       - "4174:4174"
     volumes:
-      - ./db.json:/app/db.json
+      - guitarramaster_data:/app/data
     healthcheck:
       test:
         - CMD
@@ -23,3 +24,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+
+volumes:
+  guitarramaster_data:

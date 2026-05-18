@@ -1,14 +1,14 @@
 import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { createReadStream, existsSync, statSync } from 'node:fs';
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = path.resolve(root, process.argv[2] || '.');
 const port = Number(process.argv[3] || process.env.PORT || 4173);
-const dbPath = path.join(root, 'db.json');
+const dbPath = path.resolve(process.env.DB_PATH || path.join(root, 'db.json'));
 
 const types = {
   '.css': 'text/css; charset=utf-8',
@@ -60,6 +60,7 @@ async function readDb() {
 }
 
 async function writeDb(db) {
+  await mkdir(path.dirname(dbPath), { recursive: true });
   await writeFile(dbPath, `${JSON.stringify(db, null, 2)}\n`, 'utf8');
 }
 
