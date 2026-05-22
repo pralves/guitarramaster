@@ -6,23 +6,20 @@ services:
     image: guitarramaster:latest
     container_name: guitarramaster
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       NODE_ENV: production
       PORT: 4174
-      DB_PATH: /app/data/db.json
-    volumes:
-      - guitarramaster_data:/app/data
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      SUPABASE_LEADS_TABLE: ${SUPABASE_LEADS_TABLE:-minicurso_inscricoes}
     labels:
       - traefik.enable=true
       - traefik.http.routers.guitarramaster.rule=Host(`guitarramaster.com.br`) || Host(`www.guitarramaster.com.br`)
       - traefik.http.routers.guitarramaster.entrypoints=websecure
       - traefik.http.routers.guitarramaster.tls.certresolver=letsencrypt
       - traefik.http.services.guitarramaster.loadbalancer.server.port=4174
-
-volumes:
-  guitarramaster_data:
-
-
 
 # services:
 #   guitarramaster:

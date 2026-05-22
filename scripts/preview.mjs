@@ -1,14 +1,19 @@
 import http from 'node:http';
 import { randomUUID } from 'node:crypto';
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+loadEnvFile(path.join(root, '.env'));
+
 const publicDir = path.resolve(root, process.argv[2] || '.');
 const port = Number(process.argv[3] || process.env.PORT || 4173);
 const dbPath = path.resolve(process.env.DB_PATH || path.join(root, 'db.json'));
+const supabaseUrl = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabaseLeadsTable = process.env.SUPABASE_LEADS_TABLE || 'minicurso_inscricoes';
 
 const types = {
   '.css': 'text/css; charset=utf-8',
@@ -19,6 +24,22 @@ const types = {
   '.webp': 'image/webp',
   '.txt': 'text/plain; charset=utf-8'
 };
+
+function loadEnvFile(filePath) {
+  if (!existsSync(filePath)) return;
+
+  const contents = readFileSync(filePath, 'utf8');
+
+  for (const line of contents.split(/\r?\n/)) {
+    const match = line.match(/^\s*([^#=\s]+)\s*=\s*(.*)\s*$/);
+    if (!match) continue;
+
+    const [, key, rawValue] = match;
+    if (process.env[key]) continue;
+
+    process.env[key] = rawValue.replace(/^['"]|['"]$/g, '');
+  }
+}
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, {'Content-Type': 'application/json; charset=utf-8'});
@@ -64,6 +85,39 @@ async function writeDb(db) {
   await writeFile(dbPath, `${JSON.stringify(db, null, 2)}\n`, 'utf8');
 }
 
+async function createLead(lead) {
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('Supabase nao configurado');
+    }
+
+    const db = await readDb();
+    const localLead = { id: randomUUID(), ...lead };
+    db.leads.push(localLead);
+    await writeDb(db);
+    return localLead;
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/${encodeURIComponent(supabaseLeadsTable)}`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseServiceRoleKey,
+      Authorization: `Bearer ${supabaseServiceRoleKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify(lead)
+  });
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(text || 'Erro ao gravar no Supabase');
+  }
+
+  return text ? JSON.parse(text)[0] : lead;
+}
+
 async function handleApi(req, res, url) {
   if (url.pathname !== '/api/leads') {
     sendJson(res, 404, { error: 'Endpoint not found' });
@@ -84,28 +138,28 @@ async function handleApi(req, res, url) {
     const payload = JSON.parse(await readRequestBody(req));
     const name = String(payload.name || '').trim();
     const email = String(payload.email || '').trim();
+    const phone = String(payload.phone || '').trim();
+    const state = String(payload.state || '').trim();
+    const instrument = String(payload.instrument || '').trim();
 
-    if (!name || !email || !email.includes('@')) {
-      sendJson(res, 400, { error: 'Nome e e-mail valido sao obrigatorios' });
+    if (!name || !phone || !email || !email.includes('@') || !state || !instrument) {
+      sendJson(res, 400, { error: 'Nome, telefone, e-mail, estado e instrumento sao obrigatorios' });
       return;
     }
 
-    const db = await readDb();
     const lead = {
-      id: randomUUID(),
       name,
       email,
-      phone: String(payload.phone || '').trim(),
-      message: String(payload.message || '').trim(),
+      phone,
+      state,
+      instrument,
       source: String(payload.source || 'cadastro-interessado').trim(),
-      createdAt: new Date().toISOString()
+      created_at: new Date().toISOString()
     };
 
-    db.leads.push(lead);
-    await writeDb(db);
-    sendJson(res, 201, { lead });
+    sendJson(res, 201, { lead: await createLead(lead) });
   } catch (error) {
-    sendJson(res, 400, { error: error.message || 'Invalid request' });
+    sendJson(res, 502, { error: error.message || 'Erro ao gravar cadastro' });
   }
 }
 

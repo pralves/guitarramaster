@@ -62,13 +62,14 @@
     const formData = new FormData(leadForm);
     const lead = {
       name: String(formData.get('name') || '').trim(),
-      email: String(formData.get('email') || '').trim(),
       phone: String(formData.get('phone') || '').trim(),
-      message: String(formData.get('message') || '').trim(),
+      email: String(formData.get('email') || '').trim(),
+      state: String(formData.get('state') || '').trim(),
+      instrument: String(formData.get('instrument') || '').trim(),
       source: String(formData.get('source') || 'cadastro-interessado').trim()
     };
 
-    if(!lead.name || !lead.email) return;
+    if(!lead.name || !lead.phone || !lead.email || !lead.state || !lead.instrument) return;
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Enviando...';

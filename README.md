@@ -34,7 +34,9 @@ Para publicar localmente com Docker ativo:
 docker compose up -d --build
 ```
 
-A aplicacao sobe em `http://localhost:4174`. Os cadastros ficam persistidos no volume nomeado `guitarramaster_data`, usando `DB_PATH=/app/data/db.json`.
+A aplicacao sobe em `http://localhost:4174`. Em producao, os cadastros sao enviados para o Supabase por `POST /api/leads`.
+
+Crie um arquivo `.env` no servidor a partir de `.env.example` e preencha a `SUPABASE_SERVICE_ROLE_KEY`. O segredo nao deve ser colocado no `docker-compose.yml`.
 
 ## Estrutura
 
@@ -45,6 +47,10 @@ A aplicacao sobe em `http://localhost:4174`. Os cadastros ficam persistidos no v
 - `scripts/preview.mjs`: servidor local simples para conferir o build.
 - `db.json`: base local onde o preview grava os cadastros enviados para `/api/leads`.
 
-## Cadastro local
+## Cadastro
 
-Os botoes "Garantir minha vaga" e "Quero ser um Guitarra Master" abrem o formulario de interessados. Ao rodar `npm.cmd run preview`, o servidor aceita `POST /api/leads` e persiste cada cadastro em `db.json`.
+Os botoes "Garantir minha vaga" e "Quero ser um Guitarra Master" abrem o formulario de interessados. O formulario envia nome, telefone, e-mail, estado, instrumento de preferencia e origem do clique.
+
+Antes do deploy, crie a tabela no Supabase usando `supabase/minicurso_inscricoes.sql`.
+
+Ao rodar localmente sem variaveis do Supabase, o servidor ainda aceita `POST /api/leads` e persiste cada cadastro em `db.json` para teste.

@@ -184,13 +184,54 @@
       <form id="lead-form" class="gm-form mt-6" data-endpoint="/api/leads">
         <input type="hidden" id="lead-source" name="source" value="cadastro-interessado" />
         <label for="lead-name" class="gm-sr-only">Nome</label>
-        <input type="text" id="lead-name" name="name" placeholder="Seu nome" autocomplete="name" required />
+        <input type="text" id="lead-name" name="name" placeholder="Nome completo" autocomplete="name" required />
+        <label for="lead-phone" class="gm-sr-only">Telefone</label>
+        <input type="tel" id="lead-phone" name="phone" placeholder="Telefone / WhatsApp" autocomplete="tel" required />
         <label for="lead-email" class="gm-sr-only">E-mail</label>
         <input type="email" id="lead-email" name="email" placeholder="seu@exemplo.com" autocomplete="email" required />
-        <label for="lead-phone" class="gm-sr-only">WhatsApp</label>
-        <input type="tel" id="lead-phone" name="phone" placeholder="WhatsApp" autocomplete="tel" />
-        <label for="lead-message" class="gm-sr-only">Mensagem</label>
-        <textarea id="lead-message" name="message" rows="3" placeholder="Conte rapidamente seu nível atual na guitarra"></textarea>
+        <label for="lead-state" class="gm-sr-only">Estado</label>
+        <select id="lead-state" name="state" required>
+          <option value="">Estado</option>
+          <option value="AC">Acre</option>
+          <option value="AL">Alagoas</option>
+          <option value="AP">Amapa</option>
+          <option value="AM">Amazonas</option>
+          <option value="BA">Bahia</option>
+          <option value="CE">Ceara</option>
+          <option value="DF">Distrito Federal</option>
+          <option value="ES">Espirito Santo</option>
+          <option value="GO">Goias</option>
+          <option value="MA">Maranhao</option>
+          <option value="MT">Mato Grosso</option>
+          <option value="MS">Mato Grosso do Sul</option>
+          <option value="MG">Minas Gerais</option>
+          <option value="PA">Para</option>
+          <option value="PB">Paraiba</option>
+          <option value="PR">Parana</option>
+          <option value="PE">Pernambuco</option>
+          <option value="PI">Piaui</option>
+          <option value="RJ">Rio de Janeiro</option>
+          <option value="RN">Rio Grande do Norte</option>
+          <option value="RS">Rio Grande do Sul</option>
+          <option value="RO">Rondonia</option>
+          <option value="RR">Roraima</option>
+          <option value="SC">Santa Catarina</option>
+          <option value="SP">Sao Paulo</option>
+          <option value="SE">Sergipe</option>
+          <option value="TO">Tocantins</option>
+        </select>
+        <label for="lead-instrument" class="gm-sr-only">Instrumento de preferencia</label>
+        <select id="lead-instrument" name="instrument" required>
+          <option value="">Instrumento de preferencia</option>
+          <option value="Guitarra">Guitarra</option>
+          <option value="Baixo">Baixo</option>
+          <option value="Violao">Violao</option>
+          <option value="Bateria">Bateria</option>
+          <option value="Gaita">Gaita</option>
+          <option value="Teclado">Teclado</option>
+          <option value="Percussao">Percussao</option>
+          <option value="Outros">Outros</option>
+        </select>
         <button type="submit" class="gm-btn gm-btn--primary">Enviar cadastro</button>
       </form>
       <p class="gm-modal__note">Sem spam. Você pode cancelar a qualquer momento.</p>
