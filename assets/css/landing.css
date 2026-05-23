@@ -81,8 +81,11 @@ html{scroll-behavior:smooth}
 .gm-form select option{background:#071120;color:#fff}
 .gm-form textarea{min-height:5.75rem;resize:vertical}
 .gm-form input::placeholder,.gm-form textarea::placeholder{color:rgba(255,255,255,0.55)}
+.gm-phone-row{display:grid;grid-template-columns:minmax(0,0.85fr) minmax(0,1.35fr);gap:0.75rem}
 .gm-modal__note{color:rgba(255,255,255,0.62);font-size:0.85rem}
 .gm-sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;white-space:nowrap;width:1px}
+
+@media(max-width:520px){.gm-phone-row{grid-template-columns:1fr}}
 
 @media(min-width:768px){
   .gm-hero__inner{align-items:center;flex-direction:row;justify-content:space-between}

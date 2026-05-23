@@ -4,6 +4,7 @@ import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildLeadFromPayload, saveLeadAndSendConfirmation } from './leads-service.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 loadEnvFile(path.join(root, '.env'));
@@ -13,7 +14,6 @@ const port = Number(process.argv[3] || process.env.PORT || 4173);
 const dbPath = path.resolve(process.env.DB_PATH || path.join(root, 'db.json'));
 const supabaseUrl = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const supabaseLeadsTable = process.env.SUPABASE_LEADS_TABLE || 'minicurso_inscricoes';
 
 const types = {
   '.css': 'text/css; charset=utf-8',
@@ -98,24 +98,8 @@ async function createLead(lead) {
     return localLead;
   }
 
-  const response = await fetch(`${supabaseUrl}/rest/v1/${encodeURIComponent(supabaseLeadsTable)}`, {
-    method: 'POST',
-    headers: {
-      apikey: supabaseServiceRoleKey,
-      Authorization: `Bearer ${supabaseServiceRoleKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation'
-    },
-    body: JSON.stringify(lead)
-  });
-
-  const text = await response.text();
-
-  if (!response.ok) {
-    throw new Error(text || 'Erro ao gravar no Supabase');
-  }
-
-  return text ? JSON.parse(text)[0] : lead;
+  const result = await saveLeadAndSendConfirmation(lead);
+  return result.lead;
 }
 
 async function handleApi(req, res, url) {
@@ -136,30 +120,11 @@ async function handleApi(req, res, url) {
 
   try {
     const payload = JSON.parse(await readRequestBody(req));
-    const name = String(payload.name || '').trim();
-    const email = String(payload.email || '').trim();
-    const phone = String(payload.phone || '').trim();
-    const state = String(payload.state || '').trim();
-    const instrument = String(payload.instrument || '').trim();
-
-    if (!name || !phone || !email || !email.includes('@') || !state || !instrument) {
-      sendJson(res, 400, { error: 'Nome, telefone, e-mail, estado e instrumento sao obrigatorios' });
-      return;
-    }
-
-    const lead = {
-      name,
-      email,
-      phone,
-      state,
-      instrument,
-      source: String(payload.source || 'cadastro-interessado').trim(),
-      created_at: new Date().toISOString()
-    };
+    const lead = buildLeadFromPayload(payload);
 
     sendJson(res, 201, { lead: await createLead(lead) });
   } catch (error) {
-    sendJson(res, 502, { error: error.message || 'Erro ao gravar cadastro' });
+    sendJson(res, error.statusCode || 502, { error: error.message || 'Erro ao gravar cadastro' });
   }
 }
 
