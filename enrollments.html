@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrículas - Guitarra Master</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-900 text-slate-50">
+  <header class="border-b border-slate-700 bg-slate-800 px-4 py-4 md:px-8">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4">
+      <div><p class="text-sm font-semibold text-orange-500">GM Admin</p><h1 class="text-2xl font-bold">Matrícula em módulos</h1></div>
+      <a href="/admin-dashboard.html" class="rounded border border-slate-600 px-4 py-2 text-sm hover:bg-slate-700">Voltar ao painel</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl space-y-6 p-4 md:p-8">
+    <section class="rounded-lg border border-slate-700 bg-slate-800 p-5">
+      <div class="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
+        <div><label for="studentSelect" class="mb-2 block text-sm font-medium text-slate-300">Inscrito</label><select id="studentSelect" class="w-full rounded border border-slate-600 bg-slate-700 px-4 py-2"></select></div>
+        <div><label for="moduleSelect" class="mb-2 block text-sm font-medium text-slate-300">Módulo</label><select id="moduleSelect" class="w-full rounded border border-slate-600 bg-slate-700 px-4 py-2"></select></div>
+        <button id="enrollBtn" class="rounded bg-orange-500 px-6 py-2 font-semibold hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50">Matricular</button>
+      </div>
+      <div id="feedback" class="mt-4 hidden rounded border px-4 py-3 text-sm"></div>
+    </section>
+
+    <section>
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 class="text-xl font-bold">Inscritos no minicurso</h2>
+        <input id="searchInput" type="search" placeholder="Buscar por nome ou e-mail" class="w-full rounded border border-slate-600 bg-slate-800 px-4 py-2 md:w-80">
+      </div>
+      <div class="overflow-x-auto rounded-lg border border-slate-700">
+        <table class="w-full min-w-[760px] bg-slate-800 text-left text-sm">
+          <thead class="bg-slate-700 text-slate-300"><tr><th class="p-4">Inscrito</th><th class="p-4">Contato</th><th class="p-4">Cadastro</th><th class="p-4">Módulos liberados</th><th class="p-4">Ação</th></tr></thead>
+          <tbody id="studentsBody" class="divide-y divide-slate-700"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const token = localStorage.getItem('access_token');
+    let candidates = [];
+    let modules = [];
+    if (!token) window.location.href = '/admin-login.html';
+
+    const authHeaders = { Authorization: `Bearer ${token}` };
+    const studentSelect = document.getElementById('studentSelect');
+    const moduleSelect = document.getElementById('moduleSelect');
+    const feedback = document.getElementById('feedback');
+    const enrollBtn = document.getElementById('enrollBtn');
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+    }
+
+    function showFeedback(message, success = false) {
+      feedback.textContent = message;
+      feedback.className = `mt-4 rounded border px-4 py-3 text-sm ${success ? 'border-green-700 bg-green-950 text-green-200' : 'border-red-700 bg-red-950 text-red-200'}`;
+    }
+
+    async function readError(response, fallback) {
+      try { return (await response.json()).error || fallback; } catch { return fallback; }
+    }
+
+    async function loadData() {
+      try {
+        const [candidatesResponse, modulesResponse] = await Promise.all([
+          fetch('/api/admin-management?type=enrollment', { headers: authHeaders }),
+          fetch('/api/modules', { headers: authHeaders })
+        ]);
+        if (candidatesResponse.status === 401 || modulesResponse.status === 401) {
+          localStorage.removeItem('access_token');
+          window.location.href = '/admin-login.html';
+          return;
+        }
+        if (!candidatesResponse.ok) throw new Error(await readError(candidatesResponse, 'Erro ao carregar inscritos'));
+        if (!modulesResponse.ok) throw new Error(await readError(modulesResponse, 'Erro ao carregar módulos'));
+        candidates = await candidatesResponse.json();
+        modules = await modulesResponse.json();
+        renderSelectors();
+        renderTable();
+      } catch (error) { showFeedback(error.message); }
+    }
+
+    function renderSelectors() {
+      studentSelect.innerHTML = candidates.length ? candidates.map(item => `<option value="${item.id}">${escapeHtml(item.name)} — ${escapeHtml(item.email)}</option>`).join('') : '<option value="">Nenhum inscrito encontrado</option>';
+      moduleSelect.innerHTML = modules.length ? modules.map(module => `<option value="${module.id}">${escapeHtml(module.title)}</option>`).join('') : '<option value="">Nenhum módulo disponível</option>';
+      enrollBtn.disabled = !candidates.length || !modules.length;
+    }
+
+    function renderTable() {
+      const term = document.getElementById('searchInput').value.trim().toLowerCase();
+      const rows = candidates.filter(item => `${item.name} ${item.email}`.toLowerCase().includes(term));
+      document.getElementById('studentsBody').innerHTML = rows.length ? rows.map(item => {
+        const moduleNames = modules.filter(module => item.module_ids.includes(module.id)).map(module => escapeHtml(module.title));
+        return `<tr><td class="p-4"><div class="font-semibold">${escapeHtml(item.name)}</div><div class="text-xs ${item.has_account ? 'text-green-400' : 'text-amber-400'}">${item.has_account ? 'Conta ativa' : 'Conta será criada na matrícula'}</div></td><td class="p-4"><div>${escapeHtml(item.email)}</div><div class="text-slate-400">${escapeHtml(item.phone)}</div></td><td class="p-4 text-slate-400">${new Date(item.created_at).toLocaleDateString('pt-BR')}</td><td class="p-4">${moduleNames.length ? moduleNames.join(', ') : '<span class="text-slate-500">Nenhum</span>'}</td><td class="p-4"><button class="select-student rounded border border-orange-500 px-3 py-1 text-orange-400 hover:bg-orange-500 hover:text-white" data-id="${item.id}">Selecionar</button></td></tr>`;
+      }).join('') : '<tr><td colspan="5" class="p-8 text-center text-slate-400">Nenhum inscrito encontrado.</td></tr>';
+    }
+
+    document.getElementById('studentsBody').addEventListener('click', event => {
+      const button = event.target.closest('.select-student');
+      if (!button) return;
+      studentSelect.value = button.dataset.id;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('searchInput').addEventListener('input', renderTable);
+
+    enrollBtn.addEventListener('click', async () => {
+      enrollBtn.disabled = true;
+      enrollBtn.textContent = 'Matriculando...';
+      feedback.classList.add('hidden');
+      try {
+        const response = await fetch('/api/admin-management?type=enrollment', {
+          method: 'POST', headers: { ...authHeaders, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ leadId: studentSelect.value, moduleId: moduleSelect.value })
+        });
+        if (!response.ok) throw new Error(await readError(response, 'Erro ao realizar matrícula'));
+        const result = await response.json();
+        const credential = result.account_created ? ` Conta criada. Senha temporária: ${result.temporary_password}` : '';
+        showFeedback(`Matrícula realizada com sucesso.${credential}`, true);
+        await loadData();
+      } catch (error) { showFeedback(error.message); }
+      finally { enrollBtn.disabled = !candidates.length || !modules.length; enrollBtn.textContent = 'Matricular'; }
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
