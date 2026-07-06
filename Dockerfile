@@ -10,7 +10,7 @@ COPY package.json package-lock.json ./
 COPY assets ./assets
 COPY js ./js
 COPY scripts ./scripts
-COPY index.html landing.html design-system.html robots.txt db.json ./
+COPY index.html landing.html design-system.html login.html admin-login.html admin-dashboard.html student-dashboard.html enrollments.html robots.txt db.json ./
 
 RUN npm run build
 RUN mkdir -p /app/data

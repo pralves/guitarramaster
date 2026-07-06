@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildLeadFromPayload, saveLeadAndSendConfirmation } from './leads-service.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -52,7 +52,7 @@ function readRequestBody(req) {
 
     req.on('data', chunk => {
       body += chunk;
-      if (body.length > 1_000_000) {
+      if (body.length > 100_000_000) {
         req.destroy();
         reject(new Error('Payload too large'));
       }
@@ -61,6 +61,43 @@ function readRequestBody(req) {
     req.on('end', () => resolve(body));
     req.on('error', reject);
   });
+}
+
+function enhanceApiResponse(res) {
+  if (typeof res.status !== 'function') {
+    res.status = function (statusCode) {
+      this.statusCode = statusCode;
+      return this;
+    };
+  }
+
+  if (typeof res.json !== 'function') {
+    res.json = function (payload) {
+      if (!this.headersSent && !this.getHeader('Content-Type')) {
+        this.setHeader('Content-Type', 'application/json; charset=utf-8');
+      }
+      this.end(JSON.stringify(payload));
+    };
+  }
+
+  if (typeof res.send !== 'function') {
+    res.send = function (payload) {
+      if (payload === undefined || payload === null) {
+        return this.end();
+      }
+
+      if (!this.headersSent && !this.getHeader('Content-Type')) {
+        if (typeof payload === 'object') {
+          this.setHeader('Content-Type', 'application/json; charset=utf-8');
+          return this.end(JSON.stringify(payload));
+        }
+        this.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      }
+
+      this.end(String(payload));
+      return this;
+    };
+  }
 }
 
 async function readDb() {
@@ -103,28 +140,43 @@ async function createLead(lead) {
 }
 
 async function handleApi(req, res, url) {
-  if (url.pathname !== '/api/leads') {
+  const handlerPath = url.pathname.replace(/^\/api\//, '');
+  const filePath = path.join(root, 'api', `${handlerPath}.js`);
+
+  if (!filePath.startsWith(path.join(root, 'api'))) {
+    sendJson(res, 403, { error: 'Forbidden' });
+    return;
+  }
+
+  if (!existsSync(filePath)) {
     sendJson(res, 404, { error: 'Endpoint not found' });
     return;
   }
 
-  if (req.method === 'GET') {
-    sendJson(res, 200, await readDb());
-    return;
-  }
-
-  if (req.method !== 'POST') {
-    sendJson(res, 405, { error: 'Method not allowed' });
-    return;
-  }
-
   try {
-    const payload = JSON.parse(await readRequestBody(req));
-    const lead = buildLeadFromPayload(payload);
+    const moduleUrl = pathToFileURL(filePath).href;
+    const { default: handler } = await import(moduleUrl);
 
-    sendJson(res, 201, { lead: await createLead(lead) });
+    if (typeof handler !== 'function') {
+      sendJson(res, 500, { error: 'API handler inválido' });
+      return;
+    }
+
+    // Enhance response object with Express-like helpers
+    enhanceApiResponse(res);
+
+    // Populate req.query from URL search params
+    req.query = Object.fromEntries(url.searchParams.entries());
+
+    // Parse JSON body once for the handler if required
+    if (req.headers['content-type']?.includes('application/json')) {
+      req.body = JSON.parse(await readRequestBody(req));
+    }
+
+    await handler(req, res);
   } catch (error) {
-    sendJson(res, error.statusCode || 502, { error: error.message || 'Erro ao gravar cadastro' });
+    console.error('API error:', error);
+    sendJson(res, error.statusCode || 500, { error: error.message || 'Erro interno de API' });
   }
 }
 

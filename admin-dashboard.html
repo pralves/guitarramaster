@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Guitarra Master</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .sidebar-item {
+      cursor: pointer;
+      transition: all 0.3s;
+      padding: 12px 16px;
+      border-radius: 6px;
+    }
+    .sidebar-item.active {
+      background-color: #f97316;
+      color: white;
+    }
+    .sidebar-item:hover:not(.active) {
+      background-color: #1e293b;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-50">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-slate-800 border-r border-slate-700 p-6 overflow-y-auto">
+      <h1 class="text-2xl font-bold text-orange-500 mb-8">GM Admin</h1>
+
+      <div class="space-y-2">
+        <div class="sidebar-item active" data-view="dashboard">
+          📊 Dashboard
+        </div>
+        <div class="sidebar-item" data-view="modules">
+          📚 Módulos
+        </div>
+        <div class="sidebar-item" data-view="lessons">
+          🎬 Aulas
+        </div>
+        <div class="sidebar-item" data-view="students">
+          👥 Alunos
+        </div>
+        <a class="sidebar-item block" href="/enrollments.html">
+          Matrículas
+        </a>
+        <div class="sidebar-item" data-view="classes">
+          👨‍🎓 Turmas
+        </div>
+        <div class="sidebar-item" data-view="comments">
+          💬 Comentários
+        </div>
+        <div class="sidebar-item" data-view="messages">
+          ✉️ Mensagens
+        </div>
+      </div>
+
+      <div class="mt-8 pt-8 border-t border-slate-700">
+        <p id="adminName" class="text-sm text-slate-400 mb-4"></p>
+        <button
+          id="logoutBtn"
+          class="w-full bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm font-medium transition"
+        >
+          Sair
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Bar -->
+      <div class="bg-slate-800 border-b border-slate-700 px-8 py-4">
+        <h2 id="viewTitle" class="text-2xl font-bold">Dashboard</h2>
+      </div>
+
+      <!-- Content Area -->
+      <div class="flex-1 overflow-y-auto p-8">
+        <!-- Dashboard View -->
+        <div id="dashboardView" class="space-y-6">
+          <div class="grid grid-cols-4 gap-4">
+            <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <p class="text-slate-400 text-sm">Módulos</p>
+              <p id="moduleCount" class="text-3xl font-bold text-orange-500">0</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <p class="text-slate-400 text-sm">Aulas</p>
+              <p id="lessonCount" class="text-3xl font-bold text-orange-500">0</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <p class="text-slate-400 text-sm">Alunos</p>
+              <p id="studentCount" class="text-3xl font-bold text-orange-500">0</p>
+            </div>
+            <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <p class="text-slate-400 text-sm">Turmas</p>
+              <p id="classCount" class="text-3xl font-bold text-orange-500">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modules View -->
+        <div id="modulesView" class="hidden space-y-6">
+          <button id="newModuleBtn" class="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded font-medium transition">
+            + Novo Módulo
+          </button>
+          <div id="modulesList" class="space-y-3"></div>
+        </div>
+
+        <!-- Lessons View -->
+        <div id="lessonsView" class="hidden space-y-6">
+          <div class="flex flex-wrap gap-3 items-end">
+            <div class="min-w-64">
+              <label class="block text-sm font-medium text-slate-300 mb-2">MÃ³dulo</label>
+              <select
+                id="lessonModuleSelect"
+                class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+              ></select>
+            </div>
+            <button id="newLessonBtn" class="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded font-medium transition">
+              + Nova Aula
+            </button>
+          </div>
+          <div id="lessonsList" class="space-y-3"></div>
+          <div id="lessonDetails" class="hidden bg-slate-800 border border-slate-700 rounded-lg p-6 space-y-6">
+            <div class="flex justify-between gap-4 items-start">
+              <div>
+                <p id="lessonDetailsModule" class="text-sm text-slate-400"></p>
+                <h3 id="lessonDetailsTitle" class="text-xl font-bold"></h3>
+                <p id="lessonDetailsDescription" class="text-sm text-slate-400 mt-1"></p>
+              </div>
+              <span id="lessonDetailsStatus" class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-200"></span>
+            </div>
+            <div>
+              <h4 class="font-bold mb-2">Conteudo</h4>
+              <div id="lessonDetailsContent" class="text-sm text-slate-300 whitespace-pre-wrap"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <h4 class="font-bold">Video da aula</h4>
+                <form id="lessonVideoForm" class="space-y-2">
+                  <input id="lessonVideoFile" type="file" accept="video/*" class="block w-full text-sm text-slate-300">
+                  <input id="lessonVideoDuration" type="number" min="0" placeholder="Duracao em segundos" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none">
+                  <div id="lessonVideoProgressWrap" class="hidden">
+                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                      <span>Upload</span>
+                      <span id="lessonVideoProgressText">0%</span>
+                    </div>
+                    <div class="w-full h-3 rounded bg-slate-700 overflow-hidden">
+                      <div id="lessonVideoProgressBar" class="h-full bg-orange-500 transition-all" style="width: 0%"></div>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <button type="submit" class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded font-medium transition">Enviar video</button>
+                    <span class="text-xs text-slate-400">Tamanho maximo: 5 GB</span>
+                  </div>
+                </form>
+                <div id="lessonVideosList" class="space-y-2"></div>
+              </div>
+              <div class="space-y-3">
+                <h4 class="font-bold">PDFs e materiais</h4>
+                <form id="lessonMaterialForm" class="space-y-2">
+                  <input id="lessonMaterialTitle" type="text" placeholder="Titulo do material" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none">
+                  <select id="lessonMaterialType" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none">
+                    <option value="pdf">PDF</option>
+                    <option value="document">Documento</option>
+                    <option value="archive">Arquivo compactado</option>
+                    <option value="other">Outro</option>
+                  </select>
+                  <input id="lessonMaterialFile" type="file" accept=".pdf,.doc,.docx,.zip,.rar,.7z" class="block w-full text-sm text-slate-300">
+                  <button type="submit" class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded font-medium transition">Enviar material</button>
+                </form>
+                <div id="lessonMaterialsList" class="space-y-2"></div>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <h4 class="font-bold">Exercicios</h4>
+                <form id="lessonExerciseForm" class="space-y-2">
+                  <input id="exerciseTitle" type="text" placeholder="Titulo do exercicio" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none">
+                  <textarea id="exerciseDescription" placeholder="Descricao" rows="2" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"></textarea>
+                  <textarea id="exerciseContent" placeholder="Conteudo/instrucoes" rows="3" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"></textarea>
+                  <input id="exerciseOrder" type="number" min="0" value="0" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none">
+                  <button id="exerciseSubmitBtn" type="submit" class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded font-medium transition">Criar exercicio</button>
+                </form>
+                <div id="lessonExercisesList" class="space-y-2"></div>
+              </div>
+              <div class="space-y-3">
+                <h4 class="font-bold">Comentarios e perguntas</h4>
+                <div id="lessonCommentsList" class="space-y-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Students View -->
+        <div id="studentsView" class="hidden space-y-6">
+          <div id="studentsList" class="space-y-3"></div>
+        </div>
+
+        <!-- Classes View -->
+        <div id="classesView" class="hidden space-y-6">
+          <button id="newClassBtn" class="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded font-medium transition">
+            + Nova Turma
+          </button>
+          <div id="classesList" class="space-y-3"></div>
+        </div>
+
+        <!-- Comments View -->
+        <div id="commentsView" class="hidden space-y-6">
+          <div id="commentsList" class="space-y-3"></div>
+        </div>
+
+        <!-- Messages View -->
+        <div id="messagesView" class="hidden space-y-6">
+          <button id="newMessageBtn" class="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded font-medium transition">
+            + Enviar Mensagem
+          </button>
+          <div id="messagesList" class="space-y-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module Modal -->
+  <div id="moduleModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-slate-800 rounded-lg p-8 max-w-md w-full">
+      <h3 id="moduleModalTitle" class="text-xl font-bold mb-6">Novo Módulo</h3>
+      <form id="moduleForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Título</label>
+          <input
+            id="moduleTitle"
+            type="text"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+            required
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Descrição</label>
+          <textarea
+            id="moduleDescription"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="flex gap-2 justify-end">
+          <button type="button" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600 transition" id="cancelModuleBtn">
+            Cancelar
+          </button>
+          <button id="moduleSubmitBtn" type="submit" class="px-4 py-2 rounded bg-orange-500 hover:bg-orange-600 transition font-medium">
+            Criar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lesson Modal -->
+  <div id="lessonModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-slate-800 rounded-lg p-8 max-w-md w-full">
+      <h3 id="lessonModalTitle" class="text-xl font-bold mb-6">Nova Aula</h3>
+      <form id="lessonForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Modulo</label>
+          <select
+            id="lessonFormModule"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+          ></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">TÃ­tulo</label>
+          <input
+            id="lessonTitle"
+            type="text"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+            required
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">DescriÃ§Ã£o</label>
+          <textarea
+            id="lessonDescription"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Status</label>
+          <select
+            id="lessonStatus"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+          >
+            <option value="active">Ativa</option>
+            <option value="inactive">Inativa</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Conteudo</label>
+          <textarea
+            id="lessonContent"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+            rows="5"
+          ></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Ordem</label>
+          <input
+            id="lessonOrder"
+            type="number"
+            min="0"
+            value="0"
+            class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:border-orange-500 focus:outline-none"
+          >
+        </div>
+        <div class="flex gap-2 justify-end">
+          <button type="button" class="px-4 py-2 rounded bg-slate-700 hover:bg-slate-600 transition" id="cancelLessonBtn">
+            Cancelar
+          </button>
+          <button id="lessonSubmitBtn" type="submit" class="px-4 py-2 rounded bg-orange-500 hover:bg-orange-600 transition font-medium">
+            Criar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let currentView = 'dashboard';
+    let editingModuleId = null;
+    let editingLessonId = null;
+    let currentLessonId = null;
+    let editingExerciseId = null;
+    let lessonModules = [];
+    let currentLessons = [];
+
+    // Load user on page load
+    window.addEventListener('load', async () => {
+      const token = localStorage.getItem('access_token');
+      const user = localStorage.getItem('user');
+
+      if (!token || !user) {
+        window.location.href = '/admin-login.html';
+        return;
+      }
+
+      currentUser = JSON.parse(user);
+
+      if (currentUser.user_type !== 'admin') {
+        window.location.href = '/admin-login.html';
+        return;
+      }
+
+      document.getElementById('adminName').textContent = currentUser.full_name;
+
+      // Load dashboard data
+      await loadDashboard();
+    });
+
+    // Sidebar navigation
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.addEventListener('click', async () => {
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        currentView = item.getAttribute('data-view');
+        
+        // Update title
+        const titles = {
+          dashboard: 'Dashboard',
+          modules: 'Módulos',
+          lessons: 'Aulas',
+          students: 'Alunos',
+          classes: 'Turmas',
+          comments: 'Comentários',
+          messages: 'Mensagens'
+        };
+        document.getElementById('viewTitle').textContent = titles[currentView];
+
+        // Hide all views
+        document.querySelectorAll('[id$="View"]').forEach(view => view.classList.add('hidden'));
+        document.getElementById(`${currentView}View`).classList.remove('hidden');
+
+        // Load data
+        switch (currentView) {
+          case 'modules':
+            await loadModules();
+            break;
+          case 'lessons':
+            await loadLessons();
+            break;
+          case 'students':
+            await loadStudents();
+            break;
+          case 'classes':
+            await loadClasses();
+            break;
+          case 'comments':
+            await loadComments();
+            break;
+          case 'messages':
+            await loadMessages();
+            break;
+        }
+      });
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      window.location.href = '/admin-login.html';
+    });
+
+    // Load dashboard
+    async function loadDashboard() {
+      try {
+        // Load counts
+        const modulesRes = await fetch('/api/modules', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const modules = await modulesRes.json();
+        document.getElementById('moduleCount').textContent = modules.length;
+
+        const studentsRes = await fetch('/api/admin-management?type=student', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const students = await studentsRes.json();
+        document.getElementById('studentCount').textContent = students.length;
+
+        const classesRes = await fetch('/api/admin-management?type=class', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const classes = await classesRes.json();
+        document.getElementById('classCount').textContent = classes.length;
+
+        // Lesson count would need to sum all lessons from modules
+        let totalLessons = 0;
+        for (const module of modules) {
+          const lessonsRes = await fetch(`/api/lessons?moduleId=${module.id}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+          });
+          if (lessonsRes.ok) {
+            const moduleLessons = await lessonsRes.json();
+            totalLessons += moduleLessons.length;
+          }
+        }
+        document.getElementById('lessonCount').textContent = totalLessons;
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+      }
+    }
+
+    // Load modules
+    async function loadModules() {
+      try {
+        const response = await fetch('/api/modules', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const modules = await response.json();
+
+        const list = document.getElementById('modulesList');
+        list.innerHTML = '';
+
+        modules.forEach(module => {
+          const div = document.createElement('div');
+          div.className = 'bg-slate-800 border border-slate-700 rounded-lg p-4 flex justify-between items-center';
+          div.innerHTML = `
+            <div>
+              <h3 class="font-bold">${module.title}</h3>
+              <p class="text-sm text-slate-400">${module.description || 'Sem descrição'}</p>
+            </div>
+            <button class="text-orange-500 hover:text-orange-400 edit-module-btn" data-id="${module.id}">
+              Editar
+            </button>
+          `;
+          list.appendChild(div);
+        });
+
+        document.querySelectorAll('.edit-module-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            const module = modules.find(item => item.id === button.dataset.id);
+            if (!module) return;
+
+            editingModuleId = module.id;
+            document.getElementById('moduleModalTitle').textContent = 'Editar Módulo';
+            document.getElementById('moduleTitle').value = module.title || '';
+            document.getElementById('moduleDescription').value = module.description || '';
+            document.getElementById('moduleSubmitBtn').textContent = 'Salvar';
+            document.getElementById('moduleModal').classList.remove('hidden');
+          });
+        });
+      } catch (error) {
+        console.error('Error loading modules:', error);
+      }
+    }
+
+    // Load lessons
+    async function loadLessons() {
+      try {
+        const modulesResponse = await fetch('/api/modules', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+
+        if (!modulesResponse.ok) {
+          throw new Error(await readApiError(modulesResponse, 'Erro ao carregar modulos'));
+        }
+
+        lessonModules = await modulesResponse.json();
+        if (!Array.isArray(lessonModules)) {
+          throw new Error('Resposta invalida ao carregar modulos.');
+        }
+
+        const moduleSelect = document.getElementById('lessonModuleSelect');
+        const previousModuleId = moduleSelect.value;
+        moduleSelect.innerHTML = '';
+
+        if (lessonModules.length === 0) {
+          document.getElementById('newLessonBtn').disabled = true;
+          document.getElementById('lessonsList').innerHTML = '<p class=text-slate-400>Crie um modulo antes de cadastrar aulas.</p>';
+          return;
+        }
+
+        document.getElementById('newLessonBtn').disabled = false;
+
+        lessonModules.forEach(module => {
+          const option = document.createElement('option');
+          option.value = module.id;
+          option.textContent = module.title;
+          moduleSelect.appendChild(option);
+        });
+        renderLessonModuleOptions();
+
+        if (previousModuleId && lessonModules.some(module => module.id === previousModuleId)) {
+          moduleSelect.value = previousModuleId;
+        }
+
+        await loadLessonsForSelectedModule();
+      } catch (error) {
+        console.error('Error loading lessons:', error);
+        document.getElementById('lessonsList').innerHTML = `<p class=text-red-300>${error.message || 'Erro ao carregar aulas.'}</p>`;
+      }
+    }
+
+    async function loadLessonsForSelectedModule() {
+      const moduleId = document.getElementById('lessonModuleSelect').value;
+      const list = document.getElementById('lessonsList');
+
+      if (!moduleId) {
+        currentLessons = [];
+        list.innerHTML = '<p class="text-slate-400">Selecione um mÃ³dulo.</p>';
+        return;
+      }
+
+      const response = await fetch(`/api/lessons?moduleId=${moduleId}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+      });
+
+      if (!response.ok) {
+        throw new Error(await readApiError(response, 'Erro ao listar aulas'));
+      }
+
+      currentLessons = await response.json();
+      if (!Array.isArray(currentLessons)) {
+        throw new Error('Resposta invalida ao listar aulas.');
+      }
+      list.innerHTML = '';
+
+      if (currentLessons.length === 0) {
+        list.innerHTML = '<p class="text-slate-400">Nenhuma aula cadastrada neste mÃ³dulo.</p>';
+        return;
+      }
+
+      currentLessons.forEach(lesson => {
+        const div = document.createElement('div');
+        div.className = 'bg-slate-800 border border-slate-700 rounded-lg p-4 flex justify-between items-center';
+        div.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">#${lesson.order_index || 0}</span>
+              <h3 class="font-bold">${lesson.title}</h3>
+            </div>
+            <p class="text-sm text-slate-400">${lesson.description || 'Sem descriÃ§Ã£o'}</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="text-blue-400 hover:text-blue-300 manage-lesson-btn" data-id="${lesson.id}">
+              Gerenciar
+            </button>
+            <button class="text-orange-500 hover:text-orange-400 edit-lesson-btn" data-id="${lesson.id}">
+              Editar
+            </button>
+            <button class="text-red-400 hover:text-red-300 delete-lesson-btn" data-id="${lesson.id}">
+              Excluir
+            </button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+
+      document.querySelectorAll('.edit-lesson-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const lesson = currentLessons.find(item => item.id === button.dataset.id);
+          if (!lesson) return;
+
+          openLessonModal(lesson);
+        });
+      });
+
+      document.querySelectorAll('.manage-lesson-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+          const lesson = currentLessons.find(item => item.id === button.dataset.id);
+          if (!lesson) return;
+
+          await loadLessonDetails(lesson);
+        });
+      });
+
+      document.querySelectorAll('.delete-lesson-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+          const lesson = currentLessons.find(item => item.id === button.dataset.id);
+          if (!lesson || !confirm(`Excluir a aula "${lesson.title}"?`)) return;
+
+          const response = await fetch(`/api/lessons?id=${lesson.id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+          });
+
+          if (!response.ok) {
+            alert('Erro ao excluir aula');
+            return;
+          }
+
+          await loadLessonsForSelectedModule();
+          await loadDashboard();
+        });
+      });
+    }
+
+    function renderLessonModuleOptions() {
+      const modalSelect = document.getElementById('lessonFormModule');
+      if (!modalSelect) return;
+
+      modalSelect.innerHTML = '';
+      lessonModules.forEach(module => {
+        const option = document.createElement('option');
+        option.value = module.id;
+        option.textContent = module.title;
+        modalSelect.appendChild(option);
+      });
+    }
+
+    function openLessonModal(lesson = null) {
+      const selectedModuleId = document.getElementById('lessonModuleSelect').value;
+      editingLessonId = lesson?.id || null;
+      renderLessonModuleOptions();
+
+      document.getElementById('lessonModalTitle').textContent = lesson ? 'Editar Aula' : 'Nova Aula';
+      document.getElementById('lessonTitle').value = lesson?.title || '';
+      document.getElementById('lessonDescription').value = lesson?.description || '';
+      document.getElementById('lessonContent').value = lesson?.content || '';
+      document.getElementById('lessonOrder').value = lesson?.order_index ?? currentLessons.length;
+      document.getElementById('lessonStatus').value = lesson?.active === false ? 'inactive' : 'active';
+      document.getElementById('lessonFormModule').value = lesson?.module_id || selectedModuleId;
+      document.getElementById('lessonSubmitBtn').textContent = lesson ? 'Salvar' : 'Criar';
+      document.getElementById('lessonModal').classList.remove('hidden');
+    }
+
+    async function loadLessonDetails(lesson) {
+      currentLessonId = lesson.id;
+      const module = lessonModules.find(item => item.id === lesson.module_id);
+      const details = document.getElementById('lessonDetails');
+
+      document.getElementById('lessonDetailsModule').textContent = module ? `Modulo: ${module.title}` : '';
+      document.getElementById('lessonDetailsTitle').textContent = lesson.title;
+      document.getElementById('lessonDetailsDescription').textContent = lesson.description || 'Sem descricao';
+      document.getElementById('lessonDetailsContent').textContent = lesson.content || 'Sem conteudo cadastrado.';
+      document.getElementById('lessonDetailsStatus').textContent = lesson.active === false ? 'Inativa' : 'Ativa';
+      details.classList.remove('hidden');
+
+      await Promise.all([
+        loadLessonVideos(lesson.id),
+        loadLessonMaterials(lesson.id),
+        loadLessonExercises(lesson.id),
+        loadLessonComments(lesson.id)
+      ]);
+    }
+
+    async function loadLessonVideos(lessonId) {
+      const response = await fetch(`/api/lessons?id=${lessonId}&action=videos`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      const list = document.getElementById('lessonVideosList');
+
+      if (!response.ok) {
+        list.innerHTML = '<p class="text-red-300 text-sm">Erro ao carregar videos.</p>';
+        return;
+      }
+
+      const videos = await response.json();
+      list.innerHTML = videos.length
+        ? videos.map(video => `
+            <div class="text-sm bg-slate-700 rounded p-3">
+              <a class="text-orange-300 hover:text-orange-200" href="${video.file_path}" target="_blank">${video.file_name}</a>
+              <p class="text-slate-400">${formatFileSize(video.file_size)}${video.duration_seconds ? ` - ${video.duration_seconds}s` : ''}</p>
+            </div>
+          `).join('')
+        : '<p class="text-slate-400 text-sm">Nenhum video enviado.</p>';
+    }
+
+    async function loadLessonMaterials(lessonId) {
+      const response = await fetch(`/api/lessons?id=${lessonId}&action=materials`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      const list = document.getElementById('lessonMaterialsList');
+
+      if (!response.ok) {
+        list.innerHTML = '<p class="text-red-300 text-sm">Erro ao carregar materiais.</p>';
+        return;
+      }
+
+      const materials = await response.json();
+      list.innerHTML = materials.length
+        ? materials.map(material => `
+            <div class="text-sm bg-slate-700 rounded p-3">
+              <a class="text-orange-300 hover:text-orange-200" href="${material.file_path}" target="_blank">${material.title}</a>
+              <p class="text-slate-400">${material.file_name} - ${formatFileSize(material.file_size)}</p>
+            </div>
+          `).join('')
+        : '<p class="text-slate-400 text-sm">Nenhum material enviado.</p>';
+    }
+
+    async function loadLessonExercises(lessonId) {
+      const response = await fetch(`/api/lessons?id=${lessonId}&action=exercises`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      const list = document.getElementById('lessonExercisesList');
+
+      if (!response.ok) {
+        list.innerHTML = '<p class="text-red-300 text-sm">Erro ao carregar exercicios.</p>';
+        return;
+      }
+
+      const exercises = await response.json();
+      document.getElementById('exerciseOrder').value = exercises.length;
+      list.innerHTML = exercises.length
+        ? exercises.map(exercise => `
+            <div class="text-sm bg-slate-700 rounded p-3 flex justify-between gap-3">
+              <div>
+                <p class="font-bold">#${exercise.order_index || 0} ${exercise.title}</p>
+                <p class="text-slate-400">${exercise.description || 'Sem descricao'}</p>
+              </div>
+              <div class="flex gap-2">
+                <button class="text-orange-300 edit-exercise-btn" data-id="${exercise.id}">Editar</button>
+                <button class="text-red-300 delete-exercise-btn" data-id="${exercise.id}">Excluir</button>
+              </div>
+            </div>
+          `).join('')
+        : '<p class="text-slate-400 text-sm">Nenhum exercicio cadastrado.</p>';
+
+      document.querySelectorAll('.edit-exercise-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const exercise = exercises.find(item => item.id === button.dataset.id);
+          if (!exercise) return;
+
+          editingExerciseId = exercise.id;
+          document.getElementById('exerciseTitle').value = exercise.title || '';
+          document.getElementById('exerciseDescription').value = exercise.description || '';
+          document.getElementById('exerciseContent').value = exercise.content || '';
+          document.getElementById('exerciseOrder').value = exercise.order_index || 0;
+          document.getElementById('exerciseSubmitBtn').textContent = 'Salvar exercicio';
+        });
+      });
+
+      document.querySelectorAll('.delete-exercise-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+          if (!confirm('Excluir este exercicio?')) return;
+
+          const response = await fetch(`/api/lessons?id=${button.dataset.id}&action=exercise`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+          });
+
+          if (!response.ok) {
+            alert('Erro ao excluir exercicio');
+            return;
+          }
+
+          await loadLessonExercises(currentLessonId);
+        });
+      });
+    }
+
+    async function loadLessonComments(lessonId) {
+      const headers = { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` };
+      const [approvedResponse, pendingResponse] = await Promise.all([
+        fetch(`/api/comments-messages?type=comment&id=${lessonId}`, { headers }),
+        fetch(`/api/comments-messages?type=comment&id=${lessonId}&action=pending`, { headers })
+      ]);
+      const list = document.getElementById('lessonCommentsList');
+
+      if (!approvedResponse.ok || !pendingResponse.ok) {
+        list.innerHTML = '<p class="text-red-300 text-sm">Erro ao carregar comentarios.</p>';
+        return;
+      }
+
+      const approved = await approvedResponse.json();
+      const pending = await pendingResponse.json();
+      const comments = [
+        ...pending.map(comment => ({ ...comment, label: 'Pendente' })),
+        ...approved.map(comment => ({ ...comment, label: 'Aprovado' }))
+      ];
+
+      list.innerHTML = comments.length
+        ? comments.map(comment => `
+            <div class="text-sm bg-slate-700 rounded p-3">
+              <div class="flex justify-between gap-2">
+                <span class="text-slate-300">${comment.label}</span>
+                <span class="text-slate-500">${new Date(comment.created_at).toLocaleDateString('pt-BR')}</span>
+              </div>
+              <p class="text-slate-200 mt-1">${comment.content}</p>
+            </div>
+          `).join('')
+        : '<p class="text-slate-400 text-sm">Nenhum comentario nesta aula.</p>';
+    }
+
+    async function uploadSelectedFile(file, folder, onProgress) {
+      const params = new URLSearchParams({
+        folder,
+        fileName: file.name
+      });
+
+      return await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `/api/uploads?${params.toString()}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('access_token')}`);
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+
+        xhr.upload.onprogress = (event) => {
+          if (!event.lengthComputable || typeof onProgress !== 'function') return;
+          onProgress(Math.round((event.loaded / event.total) * 100));
+        };
+
+        xhr.onload = () => {
+          let data = {};
+          try {
+            data = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+          } catch {
+            data = {};
+          }
+
+          if (xhr.status >= 200 && xhr.status < 300) {
+            if (typeof onProgress === 'function') onProgress(100);
+            resolve(data);
+            return;
+          }
+
+          if (xhr.status === 413) {
+            reject(new Error('O Supabase Storage recusou o arquivo por limite global de tamanho. O bucket esta em 5 GB, mas o servico Storage precisa ter FILE_SIZE_LIMIT ajustado no servidor.'));
+            return;
+          }
+
+          reject(new Error(data.message || data.error || `Erro ao enviar arquivo (${xhr.status}).`));
+        };
+
+        xhr.onerror = () => reject(new Error('Falha de rede durante o upload. Verifique o tamanho do arquivo e se o servidor local continua rodando.'));
+        xhr.onabort = () => reject(new Error('Upload cancelado.'));
+        xhr.send(file);
+      });
+    }
+
+    async function readApiError(response, fallback) {
+      if (response.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        window.location.href = '/admin-login.html';
+        return 'Sessao expirada. Faca login novamente.';
+      }
+
+      const payload = await response.json().catch(() => ({}));
+      return payload.error || fallback;
+    }
+
+    function formatFileSize(size) {
+      const value = Number(size || 0);
+      if (value < 1024) return `${value} B`;
+      if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
+      return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function setUploadProgress(percent, hide = false) {
+      const wrap = document.getElementById('lessonVideoProgressWrap');
+      const bar = document.getElementById('lessonVideoProgressBar');
+      const text = document.getElementById('lessonVideoProgressText');
+      const value = Math.max(0, Math.min(100, Number(percent || 0)));
+
+      if (hide) {
+        wrap.classList.add('hidden');
+      } else {
+        wrap.classList.remove('hidden');
+      }
+
+      bar.style.width = `${value}%`;
+      text.textContent = `${value}%`;
+    }
+
+    // Load students
+    async function loadStudents() {
+      try {
+        const response = await fetch('/api/admin-management?type=student', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const students = await response.json();
+
+        const list = document.getElementById('studentsList');
+        list.innerHTML = '';
+
+        students.forEach(student => {
+          const div = document.createElement('div');
+          div.className = 'bg-slate-800 border border-slate-700 rounded-lg p-4 flex justify-between items-center';
+          div.innerHTML = `
+            <div>
+              <h3 class="font-bold">${student.full_name}</h3>
+              <p class="text-sm text-slate-400">${student.email}</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="text-blue-400 hover:text-blue-300 text-sm">Módulos</button>
+              <button class="text-orange-500 hover:text-orange-400 text-sm">Editar</button>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Error loading students:', error);
+      }
+    }
+
+    // Load classes
+    async function loadClasses() {
+      try {
+        const response = await fetch('/api/admin-management?type=class', {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const classes = await response.json();
+
+        const list = document.getElementById('classesList');
+        list.innerHTML = '';
+
+        classes.forEach(cls => {
+          const div = document.createElement('div');
+          div.className = 'bg-slate-800 border border-slate-700 rounded-lg p-4 flex justify-between items-center';
+          div.innerHTML = `
+            <div>
+              <h3 class="font-bold">${cls.name}</h3>
+              <p class="text-sm text-slate-400">${cls.description || 'Sem descrição'}</p>
+            </div>
+            <button class="text-orange-500 hover:text-orange-400 text-sm">Gerenciar</button>
+          `;
+          list.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Error loading classes:', error);
+      }
+    }
+
+    // Load comments
+    async function loadComments() {
+      try {
+        const list = document.getElementById('commentsList');
+        list.innerHTML = '<p class="text-slate-400">Carregando comentários...</p>';
+        // This would need to fetch pending comments from lessons
+      } catch (error) {
+        console.error('Error loading comments:', error);
+      }
+    }
+
+    // Load messages
+    async function loadMessages() {
+      try {
+        const list = document.getElementById('messagesList');
+        list.innerHTML = '<p class="text-slate-400">Funcionalidade em desenvolvimento</p>';
+      } catch (error) {
+        console.error('Error loading messages:', error);
+      }
+    }
+
+    // New module button
+    document.getElementById('newModuleBtn').addEventListener('click', () => {
+      editingModuleId = null;
+      document.getElementById('moduleModalTitle').textContent = 'Novo Módulo';
+      document.getElementById('moduleForm').reset();
+      document.getElementById('moduleSubmitBtn').textContent = 'Criar';
+      document.getElementById('moduleModal').classList.remove('hidden');
+    });
+
+    document.getElementById('cancelModuleBtn').addEventListener('click', () => {
+      editingModuleId = null;
+      document.getElementById('moduleModal').classList.add('hidden');
+    });
+
+    document.getElementById('moduleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const title = document.getElementById('moduleTitle').value;
+        const description = document.getElementById('moduleDescription').value;
+
+        const url = editingModuleId ? `/api/modules?id=${editingModuleId}` : '/api/modules';
+        const response = await fetch(url, {
+          method: editingModuleId ? 'PATCH' : 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, description })
+        });
+
+        if (!response.ok) {
+          throw new Error(editingModuleId ? 'Erro ao atualizar módulo' : 'Erro ao criar módulo');
+        }
+
+        if (!response.ok) throw new Error('Erro ao criar módulo');
+
+        editingModuleId = null;
+        document.getElementById('moduleModal').classList.add('hidden');
+        await loadModules();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById('lessonModuleSelect').addEventListener('change', async () => {
+      editingLessonId = null;
+      try {
+        await loadLessonsForSelectedModule();
+      } catch (error) {
+        console.error('Error changing lesson module:', error);
+        document.getElementById('lessonsList').innerHTML = '<p class="text-red-300">Erro ao carregar aulas.</p>';
+      }
+    });
+
+    document.getElementById('newLessonBtn').addEventListener('click', () => {
+      const moduleId = document.getElementById('lessonModuleSelect').value;
+      if (!moduleId) {
+        alert('Selecione um mÃ³dulo antes de criar uma aula.');
+        return;
+      }
+
+      openLessonModal();
+    });
+
+    document.getElementById('cancelLessonBtn').addEventListener('click', () => {
+      editingLessonId = null;
+      document.getElementById('lessonModal').classList.add('hidden');
+    });
+
+    document.getElementById('lessonForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const moduleId = document.getElementById('lessonFormModule').value || document.getElementById('lessonModuleSelect').value;
+        const title = document.getElementById('lessonTitle').value;
+        const description = document.getElementById('lessonDescription').value;
+        const content = document.getElementById('lessonContent').value;
+        const order_index = Number(document.getElementById('lessonOrder').value || 0);
+        const active = document.getElementById('lessonStatus').value === 'active';
+
+        if (!moduleId) {
+          throw new Error('Selecione um mÃ³dulo.');
+        }
+
+        const url = editingLessonId ? `/api/lessons?id=${editingLessonId}` : `/api/lessons?moduleId=${moduleId}`;
+        const response = await fetch(url, {
+          method: editingLessonId ? 'PATCH' : 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, description, content, order_index, active, module_id: moduleId })
+        });
+
+        if (!response.ok) {
+          throw new Error(editingLessonId ? 'Erro ao atualizar aula' : 'Erro ao criar aula');
+        }
+
+        editingLessonId = null;
+        document.getElementById('lessonModal').classList.add('hidden');
+        document.getElementById('lessonModuleSelect').value = moduleId;
+        await loadLessonsForSelectedModule();
+        await loadDashboard();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById('lessonVideoForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        if (!currentLessonId) throw new Error('Selecione uma aula.');
+        const file = document.getElementById('lessonVideoFile').files[0];
+        if (!file) throw new Error('Selecione um video.');
+
+        setUploadProgress(0);
+        const upload = await uploadSelectedFile(file, `lessons/${currentLessonId}/videos`, setUploadProgress);
+        const response = await fetch(`/api/lessons?id=${currentLessonId}&action=videos`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            file_name: file.name,
+            file_size: file.size,
+            file_path: upload.public_url,
+            duration_seconds: Number(document.getElementById('lessonVideoDuration').value || 0)
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(await readApiError(response, 'Erro ao cadastrar video.'));
+        }
+
+        document.getElementById('lessonVideoForm').reset();
+        setUploadProgress(0, true);
+        await loadLessonVideos(currentLessonId);
+      } catch (error) {
+        setUploadProgress(0, true);
+        alert(error.message);
+      }
+    });
+
+    document.getElementById('lessonMaterialForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        if (!currentLessonId) throw new Error('Selecione uma aula.');
+        const file = document.getElementById('lessonMaterialFile').files[0];
+        const title = document.getElementById('lessonMaterialTitle').value.trim();
+        if (!file || !title) throw new Error('Informe titulo e arquivo do material.');
+
+        const upload = await uploadSelectedFile(file, `lessons/${currentLessonId}/materials`);
+        const response = await fetch(`/api/lessons?id=${currentLessonId}&action=materials`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title,
+            file_name: file.name,
+            file_size: file.size,
+            file_path: upload.public_url,
+            material_type: document.getElementById('lessonMaterialType').value
+          })
+        });
+
+        if (!response.ok) throw new Error('Erro ao cadastrar material.');
+
+        document.getElementById('lessonMaterialForm').reset();
+        await loadLessonMaterials(currentLessonId);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById('lessonExerciseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        if (!currentLessonId) throw new Error('Selecione uma aula.');
+
+        const payload = {
+          title: document.getElementById('exerciseTitle').value,
+          description: document.getElementById('exerciseDescription').value,
+          content: document.getElementById('exerciseContent').value,
+          order_index: Number(document.getElementById('exerciseOrder').value || 0)
+        };
+        const url = editingExerciseId
+          ? `/api/lessons?id=${editingExerciseId}&action=exercise`
+          : `/api/lessons?id=${currentLessonId}&action=exercises`;
+        const response = await fetch(url, {
+          method: editingExerciseId ? 'PATCH' : 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error(editingExerciseId ? 'Erro ao atualizar exercicio.' : 'Erro ao criar exercicio.');
+
+        editingExerciseId = null;
+        document.getElementById('lessonExerciseForm').reset();
+        document.getElementById('exerciseSubmitBtn').textContent = 'Criar exercicio';
+        await loadLessonExercises(currentLessonId);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    // New class button
+    document.getElementById('newClassBtn').addEventListener('click', () => {
+      const name = prompt('Nome da turma:');
+      if (!name) return;
+
+      fetch('/api/admin-management?type=class', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name })
+      }).then(async (res) => {
+        if (res.ok) {
+          await loadClasses();
+        } else {
+          alert('Erro ao criar turma');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
